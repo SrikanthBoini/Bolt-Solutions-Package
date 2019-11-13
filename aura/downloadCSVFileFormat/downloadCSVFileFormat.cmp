@@ -1,0 +1,61 @@
+<aura:component controller="csvDownloadCtrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId">          
+    <!--aura init handler , call js "loadContactList" function on component load, and display contact data on table-->   
+    <aura:handler name="init" value="{!this}" action="{!c.loadContactList}"/> 
+    
+    
+    <!--Declare Attribute for store Contact Records List-->
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="ListOfContact" type="contact[]"/>
+   <aura:attribute name="myColumns" type="List"/>
+    <aura:attribute name="draftValues" type="list" />
+    <aura:attribute name="errors" type="Object" />
+    
+    <div class="slds-card">
+        <div class="slds-p-top_small slds-p-left_small">   
+            <button class="slds-button slds-button--brand" onclick="{!c.downloadCsv}">Download As CSV</button> <br/><br/>
+        </div>
+    </div>
+    
+      <!-- Model Popup window Condition-->
+      <aura:if isTrue="{!v.isModalOpen}">
+            <!-- Modal/Popup Box starts here-->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box Header Starts here-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{!c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Preview</h2>
+                    </header>
+                    <!--Modal/Popup Box Body Starts here-->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <lightning:datatable
+                                             aura:id="contactDataTable"
+                                             columns="{!v.myColumns }"
+                                             data="{!v.ListOfContact }"
+                                             keyField="id"
+                                             draftValues="{!v.draftValues }"
+                                             errors="{! v.errors }"
+                                             onsave="{!c.handleSaveEdition }"
+                                             />
+                        
+                    </div>
+                    <!--Modal/Popup Box Footer Starts here-->
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeModel }"/>
+                        <lightning:button variant="brand"
+                                          label="OK"
+                                          title="OK"
+                                          onclick="{!c.ok}"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+</aura:component>
